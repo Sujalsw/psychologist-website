@@ -39,19 +39,26 @@ const ContactSection = () => {
 
     setLoading(true);
     try {
-      let res = await fetch("/api/send-enquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed.data),
-      });
-
-      // Fallback to direct Netlify function path if API rewrite is not ready
-      if (!res.ok) {
-        res = await fetch("/.netlify/functions/send-enquiry", {
+      let response: Response;
+      try {
+        response = await fetch("/.netlify/functions/send-enquiry", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(parsed.data),
         });
+        if (!response.ok) throw new Error();
+      } catch {
+        response = await fetch("/api/send-enquiry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(parsed.data),
+        });
+      }
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || "Failed to send email");
       }
 
       form.reset();
@@ -61,10 +68,10 @@ const ContactSection = () => {
         description: "Thank you — we will get back to you shortly.",
       });
       setTimeout(() => setSubmitted(false), 3000);
-    } catch {
+    } catch (err: any) {
       toast({
         title: "Could not send your enquiry",
-        description: "Please try again, or email sujalnightfury@gmail.com directly.",
+        description: err?.message || "Please try again, or email dramitkumarram@gmail.com directly.",
         variant: "destructive",
       });
     } finally {
@@ -109,7 +116,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-secondary-foreground font-medium text-sm">Email</p>
-                    <p className="text-secondary-foreground/70 text-sm">sujalnightfury@gmail.com</p>
+                    <p className="text-secondary-foreground/70 text-sm">dramitkumarram@gmail.com</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
