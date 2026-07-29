@@ -64,7 +64,7 @@ const ContactSection = () => {
     } catch {
       toast({
         title: "Could not send your enquiry",
-        description: "Please try again, or email prateek.swami@gmail.com directly.",
+        description: "Please try again, or email sujalnightfury@gmail.com directly.",
         variant: "destructive",
       });
     } finally {
@@ -109,7 +109,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-secondary-foreground font-medium text-sm">Email</p>
-                    <p className="text-secondary-foreground/70 text-sm">prateek.swami@gmail.com</p>
+                    <p className="text-secondary-foreground/70 text-sm">sujalnightfury@gmail.com</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">

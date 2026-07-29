@@ -41,8 +41,8 @@ export default defineConfig(({ mode }) => {
                     Buffer.concat(chunks).toString()
                   );
 
-                  const DOCTOR_EMAIL = "prateek.swami@gmail.com";
-                  const OWNER_TEST_EMAIL = "sujalsw272004@gmail.com";
+                  const DOCTOR_EMAIL = "sujalnightfury@gmail.com";
+                  const OWNER_TEST_EMAIL = "sujalnightfury@gmail.com";
 
                   const sendEmail = async (payload: any) => {
                     try {
