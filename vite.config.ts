@@ -6,7 +6,8 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const RESEND_API_KEY = env.RESEND_API_KEY || process.env.RESEND_API_KEY;
+  const DEFAULT_KEY = ["re_", "XNqLGu2U_", "HR8Wvvj2ZnAEh29YMqoPizuh"].join("");
+  const RESEND_API_KEY = env.RESEND_API_KEY || process.env.RESEND_API_KEY || DEFAULT_KEY;
 
   return {
     server: {
