@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
     const GMAIL_USER = process.env.GMAIL_USER || "sujalsw272004@gmail.com";
     const GMAIL_PASS = process.env.GMAIL_APP_PASSWORD || ["mqlz", "avpq", "nokh", "rcow"].join("");
-    const DOCTOR_EMAIL = "dramitkumarram@gmail.com";
+    const DOCTOR_EMAIL = "arnavprogammer@gmail.com";
 
     const transporter = nodemailer.createTransport({
       service: "gmail",

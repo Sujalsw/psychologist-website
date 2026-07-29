@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
 
   const GMAIL_USER = env.GMAIL_USER || process.env.GMAIL_USER || "sujalsw272004@gmail.com";
   const GMAIL_PASS = env.GMAIL_APP_PASSWORD || process.env.GMAIL_APP_PASSWORD || ["mqlz", "avpq", "nokh", "rcow"].join("");
-  const DOCTOR_EMAIL = "dramitkumarram@gmail.com";
+  const DOCTOR_EMAIL = "arnavprogammer@gmail.com";
 
   return {
     server: {
