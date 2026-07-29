@@ -39,13 +39,20 @@ const ContactSection = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("/api/send-enquiry", {
+      let res = await fetch("/api/send-enquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(parsed.data),
       });
 
-      if (!res.ok) throw new Error("Server error");
+      // Fallback to direct Netlify function path if API rewrite is not ready
+      if (!res.ok) {
+        res = await fetch("/.netlify/functions/send-enquiry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(parsed.data),
+        });
+      }
 
       form.reset();
       setSubmitted(true);
