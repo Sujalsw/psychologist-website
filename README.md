@@ -21,7 +21,7 @@ Official Website for **Dr. Amit Kumar "Ram"** – Academician, Researcher, Unive
   - Special 15-Day Cancer Patient Healing Program
   - NLP Transformation
   - Astrology Consultation (25+ Years Expertise)
-- **📬 Resend Email Integration**: Patient enquiries instantly trigger real-time notification emails to both Dr. Amit Kumar Ram (`dramitkumarram@gmail.com`) and the patient.
+- **📬 Resend Email Integration**: Patient enquiries instantly trigger real-time notification emails to both Dr. Amit Kumar Ram (`prateek.swami@gmail.com`) and the patient.
 - **🎨 Premium UI/UX**: Built with Tailwind CSS, Lucide React icons, and smooth Framer Motion animations.
 - **⚡ Netlify Ready**: Pre-configured with Netlify Serverless Functions for automated backend API routing.
 

@@ -10,7 +10,7 @@ exports.handler = async function (event) {
     const { full_name, email, service, message } = JSON.parse(event.body || "{}");
     const DEFAULT_KEY = ["re_", "XNqLGu2U_", "HR8Wvvj2ZnAEh29YMqoPizuh"].join("");
     const RESEND_API_KEY = process.env.RESEND_API_KEY || DEFAULT_KEY;
-    const DOCTOR_EMAIL = "dramitkumarram@gmail.com";
+    const DOCTOR_EMAIL = "prateek.swami@gmail.com";
     const OWNER_TEST_EMAIL = "sujalsw272004@gmail.com";
 
     const sendEmail = async (payload) => {
