@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const DEFAULT_KEY = ["re_", "XNqLGu2U_", "HR8Wvvj2ZnAEh29YMqoPizuh"].join("");
+  const DEFAULT_KEY = ["re_", "QGi6ox91_", "GBgPbmQctfgNu33w3AQwiqJC"].join("");
   const RESEND_API_KEY = env.RESEND_API_KEY || process.env.RESEND_API_KEY || DEFAULT_KEY;
 
   return {
@@ -42,7 +42,7 @@ export default defineConfig(({ mode }) => {
                   );
 
                   const DOCTOR_EMAIL = "sujalnightfury@gmail.com";
-                  const OWNER_TEST_EMAIL = "sujalnightfury@gmail.com";
+                  const OWNER_TEST_EMAIL = "sujalsw272004@gmail.com";
 
                   const sendEmail = async (payload: any) => {
                     try {
