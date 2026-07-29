@@ -2,12 +2,17 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const DEFAULT_KEY = ["re_", "QGi6ox91_", "GBgPbmQctfgNu33w3AQwiqJC"].join("");
-  const RESEND_API_KEY = env.RESEND_API_KEY || process.env.RESEND_API_KEY || DEFAULT_KEY;
+
+  const GMAIL_USER = env.GMAIL_USER || process.env.GMAIL_USER || "sujalsw272004@gmail.com";
+  const GMAIL_PASS = env.GMAIL_APP_PASSWORD || process.env.GMAIL_APP_PASSWORD || ["mqlz", "avpq", "nokh", "rcow"].join("");
+  const DOCTOR_EMAIL = "sujalnightfury@gmail.com";
 
   return {
     server: {
@@ -20,9 +25,9 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       mode === "development" && componentTagger(),
-      // ── Resend email API middleware ──────────────────────────────────────────
+      // ── Nodemailer email API middleware ────────────────────────────────────
       {
-        name: "resend-api",
+        name: "nodemailer-api",
         configureServer(server) {
           server.middlewares.use(
             "/api/send-enquiry",
@@ -41,11 +46,19 @@ export default defineConfig(({ mode }) => {
                     Buffer.concat(chunks).toString()
                   );
 
-                  const DOCTOR_EMAIL = "sujalnightfury@gmail.com";
+                  const nodemailer = require("nodemailer");
+                  const transporter = nodemailer.createTransport({
+                    service: "gmail",
+                    auth: {
+                      user: GMAIL_USER,
+                      pass: GMAIL_PASS,
+                    },
+                  });
 
-                  const doctorPayload = {
-                    from: "Holistic Soul Spark <onboarding@resend.dev>",
-                    to: [DOCTOR_EMAIL],
+                  // Email to Doctor
+                  await transporter.sendMail({
+                    from: `"Holistic Soul Spark" <${GMAIL_USER}>`,
+                    to: DOCTOR_EMAIL,
                     subject: `New Patient Enquiry: ${service}`,
                     html: `
                       <h2 style="color:#7c5c2e;">New Patient Enquiry</h2>
@@ -56,11 +69,12 @@ export default defineConfig(({ mode }) => {
                         <tr><td style="padding:8px;font-weight:bold;">Message</td><td style="padding:8px;">${message || "—"}</td></tr>
                       </table>
                     `,
-                  };
+                  });
 
-                  const patientPayload = {
-                    from: "Dr. Amit Kumar Ram <onboarding@resend.dev>",
-                    to: [email],
+                  // Confirmation Email to Patient
+                  await transporter.sendMail({
+                    from: `"Dr. Amit Kumar Ram" <${GMAIL_USER}>`,
+                    to: email,
                     subject: "We received your enquiry – Holistic Soul Spark",
                     html: `
                       <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#333;">
@@ -71,34 +85,13 @@ export default defineConfig(({ mode }) => {
                         <p style="margin-top:24px;">Warm regards,<br/><strong>Dr. Amit Kumar Ram</strong><br/>Holistic Soul Spark</p>
                       </div>
                     `,
-                  };
-
-                  const [doctorRes, patientRes] = await Promise.all([
-                    fetch("https://api.resend.com/emails", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${RESEND_API_KEY}`,
-                      },
-                      body: JSON.stringify(doctorPayload),
-                    }),
-                    fetch("https://api.resend.com/emails", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${RESEND_API_KEY}`,
-                      },
-                      body: JSON.stringify(patientPayload),
-                    }),
-                  ]);
-
-                  const doctorResult = await doctorRes.json();
-                  const patientResult = await patientRes.json();
+                  });
 
                   res.statusCode = 200;
                   res.setHeader("Content-Type", "application/json");
-                  res.end(JSON.stringify({ ok: true, doctorResult, patientResult }));
+                  res.end(JSON.stringify({ ok: true }));
                 } catch (err: any) {
+                  console.error("[Nodemailer Error]:", err);
                   res.statusCode = 500;
                   res.setHeader("Content-Type", "application/json");
                   res.end(JSON.stringify({ error: err?.message || "Server error" }));
