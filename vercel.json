@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/api/send-enquiry", "destination": "/api/send-enquiry.js" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
