@@ -42,28 +42,10 @@ export default defineConfig(({ mode }) => {
                   );
 
                   const DOCTOR_EMAIL = "sujalnightfury@gmail.com";
-                  const OWNER_TEST_EMAIL = "sujalsw272004@gmail.com";
 
-                  const sendEmail = async (payload: any) => {
-                    try {
-                      const response = await fetch("https://api.resend.com/emails", {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                          Authorization: `Bearer ${RESEND_API_KEY}`,
-                        },
-                        body: JSON.stringify(payload),
-                      });
-                      const data = await response.json();
-                      return { ok: response.ok, data, status: response.status };
-                    } catch (err: any) {
-                      return { ok: false, error: err?.message };
-                    }
-                  };
-
-                  const doctorPayload = (toEmail: string) => ({
+                  const doctorPayload = {
                     from: "Holistic Soul Spark <onboarding@resend.dev>",
-                    to: [toEmail],
+                    to: [DOCTOR_EMAIL],
                     subject: `New Patient Enquiry: ${service}`,
                     html: `
                       <h2 style="color:#7c5c2e;">New Patient Enquiry</h2>
@@ -74,11 +56,11 @@ export default defineConfig(({ mode }) => {
                         <tr><td style="padding:8px;font-weight:bold;">Message</td><td style="padding:8px;">${message || "—"}</td></tr>
                       </table>
                     `,
-                  });
+                  };
 
-                  const patientPayload = (toEmail: string) => ({
+                  const patientPayload = {
                     from: "Dr. Amit Kumar Ram <onboarding@resend.dev>",
-                    to: [toEmail],
+                    to: [email],
                     subject: "We received your enquiry – Holistic Soul Spark",
                     html: `
                       <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#333;">
@@ -89,25 +71,37 @@ export default defineConfig(({ mode }) => {
                         <p style="margin-top:24px;">Warm regards,<br/><strong>Dr. Amit Kumar Ram</strong><br/>Holistic Soul Spark</p>
                       </div>
                     `,
-                  });
+                  };
 
-                  let doctorRes = await sendEmail(doctorPayload(DOCTOR_EMAIL));
-                  if (!doctorRes.ok) {
-                    doctorRes = await sendEmail(doctorPayload(OWNER_TEST_EMAIL));
-                  }
+                  const [doctorRes, patientRes] = await Promise.all([
+                    fetch("https://api.resend.com/emails", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${RESEND_API_KEY}`,
+                      },
+                      body: JSON.stringify(doctorPayload),
+                    }),
+                    fetch("https://api.resend.com/emails", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${RESEND_API_KEY}`,
+                      },
+                      body: JSON.stringify(patientPayload),
+                    }),
+                  ]);
 
-                  let patientRes = await sendEmail(patientPayload(email));
-                  if (!patientRes.ok) {
-                    patientRes = await sendEmail(patientPayload(OWNER_TEST_EMAIL));
-                  }
+                  const doctorResult = await doctorRes.json();
+                  const patientResult = await patientRes.json();
 
                   res.statusCode = 200;
                   res.setHeader("Content-Type", "application/json");
-                  res.end(JSON.stringify({ ok: true, doctorRes, patientRes }));
+                  res.end(JSON.stringify({ ok: true, doctorResult, patientResult }));
                 } catch (err: any) {
-                  res.statusCode = 200;
+                  res.statusCode = 500;
                   res.setHeader("Content-Type", "application/json");
-                  res.end(JSON.stringify({ ok: true, warning: err?.message }));
+                  res.end(JSON.stringify({ error: err?.message || "Server error" }));
                 }
               });
             }

@@ -11,28 +11,10 @@ exports.handler = async function (event) {
     const DEFAULT_KEY = ["re_", "QGi6ox91_", "GBgPbmQctfgNu33w3AQwiqJC"].join("");
     const RESEND_API_KEY = process.env.RESEND_API_KEY || DEFAULT_KEY;
     const DOCTOR_EMAIL = "sujalnightfury@gmail.com";
-    const OWNER_TEST_EMAIL = "sujalsw272004@gmail.com";
 
-    const sendEmail = async (payload) => {
-      try {
-        const res = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${RESEND_API_KEY}`,
-          },
-          body: JSON.stringify(payload),
-        });
-        const data = await res.json();
-        return { ok: res.ok, data, status: res.status };
-      } catch (err) {
-        return { ok: false, error: err.message };
-      }
-    };
-
-    const doctorPayload = (toEmail) => ({
+    const doctorPayload = {
       from: "Holistic Soul Spark <onboarding@resend.dev>",
-      to: [toEmail],
+      to: [DOCTOR_EMAIL],
       subject: `New Patient Enquiry: ${service}`,
       html: `
         <h2 style="color:#7c5c2e;">New Patient Enquiry</h2>
@@ -43,11 +25,11 @@ exports.handler = async function (event) {
           <tr><td style="padding:8px;font-weight:bold;">Message</td><td style="padding:8px;">${message || "—"}</td></tr>
         </table>
       `,
-    });
+    };
 
-    const patientPayload = (toEmail) => ({
+    const patientPayload = {
       from: "Dr. Amit Kumar Ram <onboarding@resend.dev>",
-      to: [toEmail],
+      to: [email],
       subject: "We received your enquiry – Holistic Soul Spark",
       html: `
         <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#333;">
@@ -58,33 +40,42 @@ exports.handler = async function (event) {
           <p style="margin-top:24px;">Warm regards,<br/><strong>Dr. Amit Kumar Ram</strong><br/>Holistic Soul Spark</p>
         </div>
       `,
-    });
+    };
 
-    // 1. Send Doctor Notification
-    let doctorRes = await sendEmail(doctorPayload(DOCTOR_EMAIL));
-    if (!doctorRes.ok) {
-      console.log("[Resend Sandbox Fallback - Doctor Email]:", doctorRes);
-      doctorRes = await sendEmail(doctorPayload(OWNER_TEST_EMAIL));
-    }
+    // Send Doctor Email & Patient Email in parallel
+    const [doctorRes, patientRes] = await Promise.all([
+      fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify(doctorPayload),
+      }),
+      fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify(patientPayload),
+      }),
+    ]);
 
-    // 2. Send Patient Confirmation
-    let patientRes = await sendEmail(patientPayload(email));
-    if (!patientRes.ok) {
-      console.log("[Resend Sandbox Fallback - Patient Email]:", patientRes);
-      patientRes = await sendEmail(patientPayload(OWNER_TEST_EMAIL));
-    }
+    const doctorResult = await doctorRes.json();
+    const patientResult = await patientRes.json();
 
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ok: true, doctorRes, patientRes }),
+      body: JSON.stringify({ ok: true, doctorResult, patientResult }),
     };
   } catch (err) {
     console.error("[Netlify Function Error]:", err);
     return {
-      statusCode: 200,
+      statusCode: 500,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ok: true, warning: err.message }),
+      body: JSON.stringify({ error: err.message || "Server error" }),
     };
   }
 };
