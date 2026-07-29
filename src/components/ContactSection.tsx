@@ -7,7 +7,7 @@ import { toast } from "@/hooks/use-toast";
 const enquirySchema = z.object({
   full_name: z.string().trim().min(1, "Please enter your name").max(100),
   email: z.string().trim().email("Please enter a valid email").max(255),
-  service: z.string().trim().min(1, "Please select a service").max(100),
+  service: z.string().trim().min(1, "Please select the assistance required").max(100),
   message: z.string().trim().max(1000).optional(),
 });
 
@@ -30,7 +30,7 @@ const ContactSection = () => {
 
     if (!parsed.success) {
       toast({
-        title: "Please check the form",
+        title: "Required Fields Missing",
         description: parsed.error.issues[0].message,
         variant: "destructive",
       });
@@ -144,7 +144,9 @@ const ContactSection = () => {
           >
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">Full Name</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">
+                  Full Name <span className="text-destructive">*</span>
+                </label>
                 <input
                   type="text"
                   name="full_name"
@@ -155,7 +157,9 @@ const ContactSection = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">Email</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">
+                  Email <span className="text-destructive">*</span>
+                </label>
                 <input
                   type="email"
                   name="email"
@@ -167,13 +171,15 @@ const ContactSection = () => {
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block">Service Interested In</label>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">
+                Assistance Required / Service <span className="text-destructive">*</span>
+              </label>
               <select
                 name="service"
                 required
                 className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
               >
-                <option value="">Select a service</option>
+                <option value="">Select assistance required</option>
                 <option>Psychological Counselling</option>
                 <option>Past Life Regression</option>
                 <option>Reiki Healing</option>
@@ -183,7 +189,9 @@ const ContactSection = () => {
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block">Message</label>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">
+                Message <span className="text-muted-foreground font-normal">(Optional)</span>
+              </label>
               <textarea
                 rows={4}
                 name="message"
