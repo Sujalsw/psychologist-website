@@ -1,6 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
+import { Mail, MapPin, Send, Loader2, MessageCircle } from "lucide-react";
 import { z } from "zod";
 import { toast } from "@/hooks/use-toast";
 
@@ -119,15 +119,15 @@ const ContactSection = () => {
                     <p className="text-secondary-foreground/70 text-sm">dramitkumarram@gmail.com</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-gold flex items-center justify-center flex-shrink-0">
-                    <Phone className="text-secondary" size={18} />
-                  </div>
-                  <div>
-                    <p className="text-secondary-foreground font-medium text-sm">Phone</p>
-                    <p className="text-secondary-foreground/70 text-sm">Available upon appointment</p>
-                  </div>
-                </div>
+                <a
+                  href="https://wa.me/919992500906?text=Hello%20Dr.%20Amit%20Kumar%20Ram%2C%20I%20would%20like%20to%20book%20an%20online%20consultation."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 bg-[#25D366] hover:bg-[#20BD5A] text-white px-5 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:scale-105"
+                >
+                  <MessageCircle size={20} />
+                  Chat on WhatsApp
+                </a>
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-lg bg-gradient-gold flex items-center justify-center flex-shrink-0">
                     <MapPin className="text-secondary" size={18} />

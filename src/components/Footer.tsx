@@ -15,7 +15,10 @@ const Footer = () => {
             <a href="#home" className="hover:text-gold transition-colors">Home</a>
             <a href="#about" className="hover:text-gold transition-colors">About</a>
             <a href="#services" className="hover:text-gold transition-colors">Services</a>
+            <a href="#achievements" className="hover:text-gold transition-colors">Achievements</a>
             <a href="#awards" className="hover:text-gold transition-colors">Awards</a>
+            <a href="#awards-gallery" className="hover:text-gold transition-colors">Gallery</a>
+            <a href="#media" className="hover:text-gold transition-colors">Media</a>
             <a href="#contact" className="hover:text-gold transition-colors">Contact</a>
           </div>
         </div>
