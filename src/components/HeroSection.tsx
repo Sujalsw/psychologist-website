@@ -10,14 +10,14 @@ const stats = [
 
 const HeroSection = () => {
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
+    <section id="home" className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden">
       {/* Background - Doctor's photo */}
       <div className="absolute inset-0">
-        <img src={drPhoto} alt="" className="w-full h-full object-cover object-top" />
+        <img src={drPhoto} alt="" className="w-full h-full object-cover object-[75%_15%] md:object-top" />
         <div className="absolute inset-0 bg-gradient-to-r from-secondary/95 via-secondary/80 to-secondary/40" />
       </div>
 
-      <div className="container mx-auto px-6 relative z-10 pt-24 pb-16">
+      <div className="container mx-auto px-6 relative z-10 pt-20 pb-12 md:pt-24 md:pb-16">
         <div className="max-w-3xl">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
